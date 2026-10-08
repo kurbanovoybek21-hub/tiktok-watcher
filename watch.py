@@ -19,7 +19,9 @@ def fetch_videos():
         capture_output=True, text=True,
     )
     if r.returncode != 0:
-        print("::warning::TikTok не отдал список видео:\n" + r.stderr[-1500:])
+        print(r.stderr[-3000:])
+        last = (r.stderr.strip().splitlines() or ["пусто"])[-1]
+        print("::warning::TikTok не отдал список видео: " + last)
         sys.exit(0)  # не валим запуск, чтобы GitHub не слал письма об ошибках
     data = json.loads(r.stdout)
     return [(str(e["id"]), f"https://www.tiktok.com/@{USER}/video/{e['id']}")
